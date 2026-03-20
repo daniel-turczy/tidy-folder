@@ -62,8 +62,7 @@ def organise_folder(folder_path):
 
             if not moved: # If no category matched, move to Others folder
                 others_folder = os.path.join(folder_path, "Others")
-                move_file_safely(original_path, others_folder, moved_files)
-
+                move_file_safely(original_path, others_folder, moved_files)     
     return moved_files
 
 
@@ -82,9 +81,9 @@ def undo_moves(moved_files):
 
             remove_empty_folder(folder_to_check)
         else:
-            filename = os.path.basename(final_path) # Only prints the filename, not the whole path
+            filename = os.path.basename(final_path) # Only print the filename, not the whole path
             print(f"{filename} not found. Could not move this file.")
-            
+
     if undone_any:
         print("Undo completed.")
     else:
@@ -92,6 +91,8 @@ def undo_moves(moved_files):
 
 
 if __name__ == "__main__":
+    session_moves = [] # Keeps track of all moves during the session
+
     while True:
         folder_path = input("\nEnter the path to the folder you want to organise (q to quit):\n")
 
@@ -100,12 +101,19 @@ if __name__ == "__main__":
             break
 
         elif os.path.exists(folder_path):
-            moved_files = organise_folder(folder_path)
+            moved_files = organise_folder(folder_path) # Can be used in undo
+            session_moves.extend(moved_files) # Can be used in session undo
+
             if moved_files:  # If any files were moved...
                 print("Folder organised successfully!")
-                undo = input("Type 'u' to undo this move or press ENTER to continue: ")
+                undo = input("\nType 'u' to undo this move,\n'a' to undo ALL moves this session,\nor press ENTER to continue: ")
                 if undo.lower() == "u":
                     undo_moves(moved_files)
+                elif undo.lower() == "a":
+                    confirm = input("Are you sure you want to undo all moves? (y/n): ")
+                    if confirm.lower() == "y":
+                        undo_moves(session_moves.copy()) # Prevents list being affected during undo
+                        session_moves.clear() # Reset session history
                 elif undo != "":
                     print("You could've just hit ENTER but ok...")
             else:
