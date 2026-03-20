@@ -61,12 +61,12 @@ TestFolder/
 ```
 
 Type `u` when prompted if you want to undo the move.
+Type `a` if you want to undo all moves in the session.
 
 ## Notes
 
 - Requires Python 3.6+
 - Works on Windows, macOS, and Linux
-- Undo can only go back by one move (for now...)
 
 ## License
 MIT License — see [LICENSE](LICENSE).
